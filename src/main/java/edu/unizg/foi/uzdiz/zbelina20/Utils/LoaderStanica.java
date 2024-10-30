@@ -13,10 +13,11 @@ import java.util.List;
 public class LoaderStanica {
     public static List<Stanica> ucitajStanice(String nazivDatoteke) {
         List<Stanica> stanice = new ArrayList<>();
+        int ukupnePogreske = 0;
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(nazivDatoteke), StandardCharsets.UTF_8))) {
             String linija;
-            int brojLinije = 0;
+            int brojLinije = 1;
 
             br.readLine();
 
@@ -26,7 +27,9 @@ public class LoaderStanica {
 
                 String[] dijelovi = linija.split(";");
                 if (dijelovi.length != 14) {
-                    System.out.printf("Greška u datoteci %s, red %d: Neispravan broj stupaca\n", nazivDatoteke, brojLinije);
+                    ukupnePogreske++;
+                    System.out.printf("Greška %d u datoteci %s, red %d: Neispravan broj stupaca (%d umjesto 14). Sadržaj: %s\n",
+                            ukupnePogreske, nazivDatoteke, brojLinije, dijelovi.length, linija);
                     continue;
                 }
 
@@ -41,19 +44,30 @@ public class LoaderStanica {
                     int brojPerona = Integer.parseInt(dijelovi[7].trim());
                     String vrstaPruge = dijelovi[8].trim();
                     int brojKolosjeka = Integer.parseInt(dijelovi[9].trim());
-                    double DOPoOsovini = Double.parseDouble(dijelovi[10].trim());
-                    double DOPoDuznomM = Double.parseDouble(dijelovi[11].trim());
+                    double DOPoOsovini = Double.parseDouble(dijelovi[10].trim().replace(",", "."));
+                    double DOPoDuznomM = Double.parseDouble(dijelovi[11].trim().replace(",", "."));
                     String statusPruge = dijelovi[12].trim();
                     int duzina = Integer.parseInt(dijelovi[13].trim());
 
                     stanice.add(new Stanica(stanica, oznakaPruge, vrstaStanice, statusStanice, ulazIzlazPutnika, utovarIstovarRobe, kategorijaPruge, brojPerona,
                             vrstaPruge, brojKolosjeka, DOPoOsovini, DOPoDuznomM, statusPruge, duzina));
                 } catch (NumberFormatException e) {
-                    System.out.printf("Greška u datoteci %s, red %d: Neispravan format za broj\n", nazivDatoteke, brojLinije);
+                    ukupnePogreske++;
+                    System.out.printf("Greška %d u datoteci %s, red %d: Neispravan format za broj. Sadržaj: %s\n",
+                            ukupnePogreske, nazivDatoteke, brojLinije, linija);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    ukupnePogreske++;
+                    System.out.printf("Greška %d u datoteci %s, red %d: Neispravan indeks. Sadržaj: %s\n",
+                            ukupnePogreske, nazivDatoteke, brojLinije, linija);
                 }
             }
         } catch (IOException e) {
             System.out.println("Greška pri čitanju datoteke: " + e.getMessage());
+        }
+
+        System.out.println("Stanice uspješno učitane!");
+        if (ukupnePogreske > 0) {
+            System.out.printf("Ukupno pogrešaka: %d\n", ukupnePogreske);
         }
 
         return stanice;

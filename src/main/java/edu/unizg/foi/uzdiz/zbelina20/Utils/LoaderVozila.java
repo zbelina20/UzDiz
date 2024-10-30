@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.zbelina20.Utils;
 
+import edu.unizg.foi.uzdiz.zbelina20.Models.Stanica;
 import edu.unizg.foi.uzdiz.zbelina20.Models.Vozilo;
 
 import java.io.BufferedReader;
@@ -13,9 +14,11 @@ import java.util.List;
 public class LoaderVozila {
     public static List<Vozilo> ucitajVozila(String nazivDatoteke) {
         List<Vozilo> vozila = new ArrayList<>();
+        int ukupnePogreske = 0;
+
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(nazivDatoteke), StandardCharsets.UTF_8))) {
             String linija;
-            int brojLinije = 0;
+            int brojLinije = 1;
 
             br.readLine();
 
@@ -25,7 +28,9 @@ public class LoaderVozila {
 
                 String[] dijelovi = linija.split(";");
                 if (dijelovi.length != 18) {
-                    System.out.printf("Greška u datoteci %s, red %d: Neispravan broj stupaca\n", nazivDatoteke, brojLinije);
+                    ukupnePogreske++;
+                    System.out.printf("Greška %d u datoteci %s, red %d: Neispravan broj stupaca (%d umjesto 14). Sadržaj: %s\n",
+                            ukupnePogreske, nazivDatoteke, brojLinije, dijelovi.length, linija);
                     continue;
                 }
 
@@ -53,12 +58,24 @@ public class LoaderVozila {
                             vrstaPogona, maksBrzina, maksSnaga, brojSjedecihMjesta, brojStajacihMjesta,
                             brojBicikala, brojKreveta, brojAutomobila, nosivost, povrsina, zapremina, status));
                 } catch (NumberFormatException e) {
-                    System.out.printf("Greška u datoteci %s, red %d: Neispravan format za broj\n", nazivDatoteke, brojLinije);
+                    ukupnePogreske++;
+                    System.out.printf("Greška %d u datoteci %s, red %d: Neispravan format za broj. Sadržaj: %s\n",
+                            ukupnePogreske, nazivDatoteke, brojLinije, linija);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    ukupnePogreske++;
+                    System.out.printf("Greška %d u datoteci %s, red %d: Neispravan indeks. Sadržaj: %s\n",
+                            ukupnePogreske, nazivDatoteke, brojLinije, linija);
                 }
             }
         } catch (IOException e) {
             System.out.println("Greška pri čitanju datoteke: " + e.getMessage());
         }
+
+        System.out.println("Vozila uspješno učitana!");
+        if (ukupnePogreske > 0) {
+            System.out.printf("Ukupno pogrešaka: %d\n", ukupnePogreske);
+        }
+
         return vozila;
     }
 }
