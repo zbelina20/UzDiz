@@ -6,27 +6,26 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LoaderVozila {
     public static List<Vozilo> ucitajVozila(String nazivDatoteke) {
         List<Vozilo> vozila = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(nazivDatoteke), "UTF-8"))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(nazivDatoteke), StandardCharsets.UTF_8))) {
             String linija;
             int brojLinije = 0;
 
-            // Preskoči zaglavlje
             br.readLine();
 
             while ((linija = br.readLine()) != null) {
                 brojLinije++;
-                // Preskoči prazne retke
                 if (linija.trim().isEmpty()) continue;
 
-                String[] dijelovi = linija.split(";"); // Separator je ";"
+                String[] dijelovi = linija.split(";");
                 if (dijelovi.length != 18) {
-                    System.out.printf("Greška u datoteci %s, red %d: Neispravan broj kolona\n", nazivDatoteke, brojLinije);
+                    System.out.printf("Greška u datoteci %s, red %d: Neispravan broj stupaca\n", nazivDatoteke, brojLinije);
                     continue;
                 }
 
