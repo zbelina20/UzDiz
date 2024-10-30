@@ -1,14 +1,17 @@
 package edu.unizg.foi.uzdiz.zbelina20;
 
-import edu.unizg.foi.uzdiz.zbelina20.Models.Vozilo;
 import edu.unizg.foi.uzdiz.zbelina20.Utils.LoaderKompozicija;
 import edu.unizg.foi.uzdiz.zbelina20.Utils.LoaderStanica;
 import edu.unizg.foi.uzdiz.zbelina20.Utils.LoaderVozila;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    private static final String predlozakPruge = ".*\\bIP\\b.*";
+    private static final String predlozakZeljeznickihStanicaNaPruzi = "^ISP\\s+[A-Z0-9]+\\s+[NO]$";
+    private static final String predlozakZeljeznickihStanica = "^ISI2S\\s+[\\p{L}\\s]+-\\s+[\\p{L}\\s]+$";
+    private static final String predlozakKompozicije = "^IK\\s+\\d+$";
+
     public static void main(String[] args) {
         if (args.length < 6) {
             System.out.println("Nedovoljno argumenata.");
@@ -64,6 +67,16 @@ public class Main {
     }
 
     private static void obradiKomandu (String komanda){
-        System.out.println("Komanda " + komanda + " obrađena.");
+        if(komanda.matches(predlozakPruge)) {
+            System.out.println("Obrađena komanda: " + komanda + "\n");
+        } else if(komanda.matches(predlozakZeljeznickihStanicaNaPruzi)) {
+            System.out.println("Obrađena komanda: " + komanda + "\n");
+        }else if(komanda.matches(predlozakZeljeznickihStanica)) {
+            System.out.println("Obrađena komanda: " + komanda + "\n");
+        }else if(komanda.matches(predlozakKompozicije)) {
+            System.out.println("Obrađena komanda: " + komanda + "\n");
+        }else {
+            System.out.println("Komanda " + komanda + " neispravna.");
+        }
     }
 }
