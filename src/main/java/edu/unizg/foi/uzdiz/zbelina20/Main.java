@@ -1,7 +1,7 @@
 package edu.unizg.foi.uzdiz.zbelina20;
 
 import edu.unizg.foi.uzdiz.zbelina20.Utils.LoaderKompozicija;
-import edu.unizg.foi.uzdiz.zbelina20.Utils.LoaderStanica;
+import edu.unizg.foi.uzdiz.zbelina20.Utils.LoaderStanicaPruga;
 import edu.unizg.foi.uzdiz.zbelina20.Utils.LoaderVozila;
 
 import java.util.Scanner;
@@ -24,7 +24,7 @@ public class Main {
                     if (i + 1 < args.length) {
                         String datotekaStanica = args[i + 1];
                         System.out.println("\nUčitavanje stanica iz datoteke: " + datotekaStanica + "\n");
-                        LoaderStanica.ucitajStanice(datotekaStanica);
+                        LoaderStanicaPruga.ucitajDatotekuStanica(datotekaStanica);
                         i++;
                     }
                     break;
@@ -32,7 +32,7 @@ public class Main {
                     if (i + 1 < args.length) {
                         String datotekaVozila = args[i + 1];
                         System.out.println("\nUčitavanje vozila iz datoteke: " + datotekaVozila + "\n");
-                        LoaderVozila.ucitajVozila(datotekaVozila);
+                        LoaderVozila.ucitajDatotekuVozila(datotekaVozila);
                         i++;
                     }
                     break;

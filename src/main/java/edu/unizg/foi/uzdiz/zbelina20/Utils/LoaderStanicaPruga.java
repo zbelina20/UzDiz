@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.zbelina20.Utils;
 
+import edu.unizg.foi.uzdiz.zbelina20.Models.Pruga;
 import edu.unizg.foi.uzdiz.zbelina20.Models.Stanica;
 
 import java.io.BufferedReader;
@@ -10,9 +11,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoaderStanica {
-    public static List<Stanica> ucitajStanice(String nazivDatoteke) {
+public class LoaderStanicaPruga {
+    public static List<Stanica> ucitajDatotekuStanica(String nazivDatoteke) {
         List<Stanica> stanice = new ArrayList<>();
+        List<Pruga> pruge = new ArrayList<>();
         int ukupnePogreske = 0;
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(nazivDatoteke), StandardCharsets.UTF_8))) {
@@ -49,8 +51,8 @@ public class LoaderStanica {
                     String statusPruge = dijelovi[12].trim();
                     int duzina = Integer.parseInt(dijelovi[13].trim());
 
-                    stanice.add(new Stanica(stanica, oznakaPruge, vrstaStanice, statusStanice, ulazIzlazPutnika, utovarIstovarRobe, kategorijaPruge, brojPerona,
-                            vrstaPruge, brojKolosjeka, DOPoOsovini, DOPoDuznomM, statusPruge, duzina));
+                    stanice.add(new Stanica(stanica, vrstaStanice, ulazIzlazPutnika, utovarIstovarRobe, brojPerona, statusStanice));
+                    pruge.add(new Pruga(oznakaPruge, kategorijaPruge, vrstaPruge, brojKolosjeka, duzina, DOPoOsovini, DOPoDuznomM, statusPruge));
                 } catch (NumberFormatException e) {
                     ukupnePogreske++;
                     System.out.printf("Greška %d u datoteci %s, red %d: Neispravan format za broj. Sadržaj: %s\n",
